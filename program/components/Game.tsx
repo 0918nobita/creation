@@ -44,12 +44,30 @@ const Game: React.VFC = () => {
             app.stage.addChild(graphics);
             */
 
+            const text = 'Hello, world!';
+            const textObj = new PIXI.Text('', { font: 'bold 60pt Arial', fill: 'black' });
+            let isTextCompletelyDisplayed = false;
+            textObj.position.x = 380;
+            textObj.position.y = 160;
+
             app.stage.addChild(guardSprite);
             app.stage.addChild(starSprite);
             app.stage.addChild(doorSprite);
+            app.stage.addChild(textObj);
+
+            let elapsedTime = 0;
 
             app.ticker.add((delta) => {
+                elapsedTime += delta;
                 starSprite.rotation += delta / 100;
+                if (!isTextCompletelyDisplayed) {
+                    const tmp = Math.floor(elapsedTime / 10);
+                    if (tmp <= text.length) {
+                        textObj.text = text.substring(0, tmp);
+                    } else {
+                        isTextCompletelyDisplayed = true;
+                    }
+                }
             });
         };
 
