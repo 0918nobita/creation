@@ -11,7 +11,6 @@ const GamePage: React.VFC = () => {
                 <title>Game</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
-            <h1>Game</h1>
             <Game />
             <p>
                 <Link href="/">
