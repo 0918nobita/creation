@@ -1,0 +1,10 @@
+{
+    "name": "A/ive - アライヴ",
+    "short_name": "A/ive",
+    "start_url": "/game",
+    "scope": "/",
+    "display": "fullscreen",
+    "orientation": "landscape",
+    "theme": "#96009C",
+    "background_color": "#000000"
+}
