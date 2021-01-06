@@ -4,25 +4,22 @@ import { useEffect, useRef } from 'react';
 const Game: React.VFC = () => {
     const ref = useRef<HTMLDivElement>(null);
 
-    const requestRef = useRef<number>();
-
     useEffect(() => {
         PIXI.utils.skipHello();
 
-        const renderer = PIXI.autoDetectRenderer({
+        const app = new PIXI.Application({
             width: 600,
             height: 500,
             antialias: true,
             backgroundColor: 0xAAAAAA,
         });
-        ref.current!.appendChild(renderer.view);
+        ref.current!.appendChild(app.view);
 
-        const stage = new PIXI.Container();
+        const loader = PIXI.Loader.shared;
 
-        PIXI.Loader.shared.add('/spritesheet.json').load(() => {
-            const sheet = PIXI.Loader.shared.resources['/spritesheet.json'].spritesheet;
+        const setup = () => {
+            const sheet = loader.resources['/spritesheet.json'].spritesheet;
             if (!sheet) return;
-
             const guardSprite = new PIXI.Sprite(sheet.textures['guard']);
             guardSprite.scale.x = 0.5;
             guardSprite.scale.y = 0.5;
@@ -44,25 +41,19 @@ const Game: React.VFC = () => {
             const graphics = new PIXI.Graphics();
             graphics.beginFill(0x00FF00);
             graphics.drawRect(0, 0, guardSprite.width, guardSprite.height);
-            stage.addChild(graphics);
+            app.stage.addChild(graphics);
             */
 
-            stage.addChild(guardSprite);
-            stage.addChild(starSprite);
-            stage.addChild(doorSprite);
+            app.stage.addChild(guardSprite);
+            app.stage.addChild(starSprite);
+            app.stage.addChild(doorSprite);
 
-            const animate = () => {
-                starSprite.rotation += 0.01;
-                renderer.render(stage);
-                requestRef.current = requestAnimationFrame(animate);
-            };
-
-            animate();
-        });
-
-        return () => {
-            cancelAnimationFrame(requestRef.current!);
+            app.ticker.add((delta) => {
+                starSprite.rotation += delta / 100;
+            });
         };
+
+        loader.add('/spritesheet.json').load(setup);
     }, []);
 
     return <div ref={ref} />;
