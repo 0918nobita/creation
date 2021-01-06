@@ -75,6 +75,20 @@ const Game: React.VFC = () => {
         };
 
         loader.add('/spritesheet.json').load(setup);
+
+        return () => {
+            loader.reset();
+
+            for (const textureUrl in PIXI.utils.BaseTextureCache) {
+                delete PIXI.utils.BaseTextureCache[textureUrl];
+            }
+
+            for (const textureUrl in PIXI.utils.TextureCache) {
+                delete PIXI.utils.TextureCache[textureUrl];
+            }
+
+            app.destroy();
+        }
     }, []);
 
     return <div ref={ref} />;
