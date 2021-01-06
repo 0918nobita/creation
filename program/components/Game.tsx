@@ -20,6 +20,7 @@ const Game: React.VFC = () => {
         const setup = () => {
             const sheet = loader.resources['/spritesheet.json'].spritesheet;
             if (!sheet) return;
+
             const guardSprite = new PIXI.Sprite(sheet.textures['guard']);
             guardSprite.scale.x = 0.5;
             guardSprite.scale.y = 0.5;
@@ -38,6 +39,7 @@ const Game: React.VFC = () => {
             doorSprite.position.y = guardSprite.height + 25;
 
             /*
+            // for debugging
             const graphics = new PIXI.Graphics();
             graphics.beginFill(0x00FF00);
             graphics.drawRect(0, 0, guardSprite.width, guardSprite.height);
@@ -60,6 +62,7 @@ const Game: React.VFC = () => {
             app.ticker.add((delta) => {
                 elapsedTime += delta;
                 starSprite.rotation += delta / 100;
+
                 if (!isTextCompletelyDisplayed) {
                     const tmp = Math.floor(elapsedTime / 10);
                     if (tmp <= text.length) {
