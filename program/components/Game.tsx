@@ -7,6 +7,8 @@ const Game: React.VFC = () => {
     const requestRef = useRef<number>();
 
     useEffect(() => {
+        PIXI.utils.skipHello();
+
         const renderer = PIXI.autoDetectRenderer({
             width: 600,
             height: 500,
