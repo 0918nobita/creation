@@ -1,6 +1,8 @@
 import * as PIXI from 'pixi.js';
 import { useEffect, useRef } from 'react';
 
+import styles from './Game.module.css';
+
 const Game: React.VFC = () => {
     const ref = useRef<HTMLDivElement>(null);
 
@@ -38,15 +40,7 @@ const Game: React.VFC = () => {
             doorSprite.scale.y = 0.5;
             doorSprite.position.y = guardSprite.height + 25;
 
-            /*
-            // for debugging
-            const graphics = new PIXI.Graphics();
-            graphics.beginFill(0x00FF00);
-            graphics.drawRect(0, 0, guardSprite.width, guardSprite.height);
-            app.stage.addChild(graphics);
-            */
-
-            const text = 'Hello, world!';
+            const text = 'Hello, PixiJS!';
             const textObj = new PIXI.Text('', { font: 'bold 60pt Arial', fill: 'black' });
             let isTextCompletelyDisplayed = false;
             textObj.position.x = 380;
@@ -87,11 +81,27 @@ const Game: React.VFC = () => {
                 delete PIXI.utils.TextureCache[textureUrl];
             }
 
+            ref.current!.removeChild(app.view);
             app.destroy();
         }
     }, []);
 
-    return <div ref={ref} />;
+    return (
+        <div
+            ref={ref}
+            className={
+                [
+                    styles.container,
+                    'flex',
+                    'justify-center',
+                    'items-center',
+                    'w-screen',
+                    'h-screen',
+                    'bg-black',
+                ].join(' ')
+            }
+        />
+    );
 };
 
 export default Game;
