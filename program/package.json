@@ -11,6 +11,8 @@
     "generate-licenses": "license-checker --production --excludePrivatePackages --json --out licenses.json"
   },
   "dependencies": {
+    "@fleur/fleur": "^2.0.0",
+    "@fleur/react": "^4.0.1",
     "next": "^10.0.4",
     "pixi.js": "^5.3.7",
     "react": "^16.12.0",
