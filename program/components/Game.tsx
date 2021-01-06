@@ -8,8 +8,8 @@ const Game: React.VFC = () => {
         PIXI.utils.skipHello();
 
         const app = new PIXI.Application({
-            width: 600,
-            height: 500,
+            width: 1280,
+            height: 720,
             antialias: true,
             backgroundColor: 0xAAAAAA,
         });
