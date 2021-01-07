@@ -1,7 +1,7 @@
 {
     "name": "A/ive - アライヴ",
     "short_name": "A/ive",
-    "start_url": "/game",
+    "start_url": "/login",
     "scope": "/",
     "display": "fullscreen",
     "orientation": "landscape",
