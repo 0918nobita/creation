@@ -34,6 +34,13 @@ const Game: React.VFC = () => {
             starSprite.position.y = starSprite.height / 2 + 25;
             starSprite.anchor.x = 0.5;
             starSprite.anchor.y = 0.5;
+            starSprite.interactive = true;
+            starSprite.on('click', () => {
+                alert('click');
+            });
+            starSprite.on('touchstart', () => {
+                alert('touch start');
+            });
 
             const doorSprite = new PIXI.Sprite(sheet.textures['door']);
             doorSprite.scale.x = 0.5;
