@@ -13,6 +13,7 @@
   "dependencies": {
     "@fleur/fleur": "^2.0.0",
     "@fleur/react": "^4.0.1",
+    "firebase": "^8.2.1",
     "next": "^10.0.4",
     "pixi.js": "^5.3.7",
     "react": "^16.12.0",
