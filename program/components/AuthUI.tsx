@@ -1,0 +1,20 @@
+import firebase from 'firebase/app';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+
+interface Props {
+    firebaseApp: firebase.app.App;
+}
+
+const uiConfig: firebaseui.auth.Config = {
+    signInFlow: 'popup',
+    signInOptions: [
+        firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    ],
+    signInSuccessUrl: '/game',
+};
+
+const AuthUI: React.VFC<Props> = ({ firebaseApp }) => (
+    <StyledFirebaseAuth firebaseAuth={firebaseApp.auth()} uiConfig={uiConfig} />
+);
+
+export default AuthUI;
