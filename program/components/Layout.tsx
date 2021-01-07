@@ -20,10 +20,6 @@ const Layout: React.FC<Props> = ({ children, title = 'This is the default title'
           <a>Home</a>
         </Link>{' '}
         |{' '}
-        <Link href="/about">
-          <a>About</a>
-        </Link>{' '}
-        |{' '}
         <Link href="/users">
           <a>Users List</a>
         </Link>{' '}
