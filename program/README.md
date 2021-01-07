@@ -8,6 +8,14 @@
 yarn
 ```
 
+`.env.local` ファイルを作成し、firebase に関する情報を以下のように記入してください。
+
+```ini
+FIREBASE_API_KEY=...
+FIREBASE_AUTH_DOMAIN=...
+FIREBASE_PROJECT_ID=...
+```
+
 ## 起動方法
 
 ```bash
