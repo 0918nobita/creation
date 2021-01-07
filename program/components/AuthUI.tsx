@@ -10,7 +10,8 @@ const uiConfig: firebaseui.auth.Config = {
     signInOptions: [
         firebase.auth.EmailAuthProvider.PROVIDER_ID,
     ],
-    signInSuccessUrl: '/game',
+    signInSuccessUrl: '/login',
+    credentialHelper: 'none',
 };
 
 const AuthUI: React.VFC<Props> = ({ firebaseApp }) => (
