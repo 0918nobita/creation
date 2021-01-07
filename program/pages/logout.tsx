@@ -1,10 +1,10 @@
 import firebase from 'firebase/app';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 
 interface Props {
-  firebaseApp?: firebase.app.App;
+    firebaseApp?: firebase.app.App;
 }
 
 const LogoutPage: React.VFC<Props> = ({ firebaseApp }) => {
@@ -16,14 +16,14 @@ const LogoutPage: React.VFC<Props> = ({ firebaseApp }) => {
         const auth = firebaseApp.auth();
         auth.onAuthStateChanged((user) => {
             if (!user) {
-                router.replace('/');
+                void router.replace('/');
                 return;
             }
-            auth.signOut().then(() => {
-                router.replace('/');
+            void auth.signOut().then(() => {
+                void router.replace('/');
             });
         });
-    }, [firebaseApp]);
+    }, [firebaseApp, router]);
 
     return (
         <>

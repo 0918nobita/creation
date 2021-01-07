@@ -2,7 +2,7 @@ import type firebase from 'firebase/app';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 const AuthUI = dynamic(import('../components/AuthUI'), { ssr: false });
 
@@ -18,9 +18,9 @@ const LoginPage: React.VFC<Props> = ({ firebaseApp }) => {
         // ログイン済みなら /game ページに自動的に遷移する
         firebaseApp.auth().onAuthStateChanged((user) => {
             if (!user) return;
-            router.replace('/game');
+            void router.replace('/game');
         });
-    }, [firebaseApp]);
+    }, [firebaseApp, router]);
 
     return (
         <>
@@ -31,6 +31,6 @@ const LoginPage: React.VFC<Props> = ({ firebaseApp }) => {
             {firebaseApp && <AuthUI firebaseApp={firebaseApp} />}
         </>
     );
-}
+};
 
 export default LoginPage;

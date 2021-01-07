@@ -1,4 +1,5 @@
 import firebase from 'firebase/app';
+import React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
 interface Props {
@@ -7,9 +8,7 @@ interface Props {
 
 const uiConfig: firebaseui.auth.Config = {
     signInFlow: 'popup',
-    signInOptions: [
-        firebase.auth.EmailAuthProvider.PROVIDER_ID,
-    ],
+    signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
     signInSuccessUrl: '/login',
     credentialHelper: 'none',
 };

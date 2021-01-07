@@ -2,7 +2,7 @@ import { reducerStore } from '@fleur/fleur';
 import { CounterActions } from './actions';
 
 interface State {
-  count: number;
+    count: number;
 }
 
 export const CounterStore = reducerStore<State>('CounterStore', () => ({

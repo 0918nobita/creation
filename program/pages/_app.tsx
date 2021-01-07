@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import 'tailwindcss/tailwind.css';
 
@@ -13,20 +13,28 @@ const firebaseConfig = {
 };
 
 const MyApp: React.VFC<AppProps> = ({ Component, pageProps }) => {
-    const [firebaseApp, setFirebaseApp] = useState<firebase.app.App | null>(null);
-
     useEffect(() => {
         if (!('serviceWorker' in navigator)) return;
-        navigator.serviceWorker.register('/sw.js').then((regisration) => {
-            console.log('Service Worker regisration successful with scope: ', regisration.scope);
+        void navigator.serviceWorker.register('/sw.js').then((regisration) => {
+            console.log(
+                'Service Worker regisration successful with scope: ',
+                regisration.scope
+            );
         });
-
-        setFirebaseApp(firebase.initializeApp(firebaseConfig));
-
-        return () => {
-            firebaseApp?.delete();
-        };
     }, []);
+
+    const [firebaseApp, setFirebaseApp] = useState<firebase.app.App | null>(
+        null
+    );
+
+    useEffect(() => {
+        if (firebaseApp) {
+            return () => {
+                void firebaseApp?.delete();
+            };
+        }
+        setFirebaseApp(firebase.initializeApp(firebaseConfig));
+    }, [firebaseApp]);
 
     return (
         <>
