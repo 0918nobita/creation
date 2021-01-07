@@ -7,6 +7,21 @@ const Game: React.VFC = () => {
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const container = ref.current!;
+
+        container.addEventListener(
+            'touchstart',
+            (e) => {
+                if (e.touches.length === 1) return;
+                e.preventDefault();
+            },
+            {
+                capture: true,
+                passive: false,
+            }
+        );
+
         PIXI.utils.skipHello();
 
         const loader = PIXI.Loader.shared;
@@ -17,8 +32,6 @@ const Game: React.VFC = () => {
             antialias: true,
             backgroundColor: 0xaaaaaa,
         });
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const container = ref.current!;
         container.appendChild(app.view);
 
         void (async () => {
