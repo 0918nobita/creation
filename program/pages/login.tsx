@@ -2,25 +2,30 @@ import type firebase from 'firebase/app';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const AuthUI = dynamic(import('../components/AuthUI'), { ssr: false });
 
 interface Props {
-    firebaseApp?: firebase.app.App;
+    firebaseAuth?: firebase.auth.Auth;
 }
 
-const LoginPage: React.VFC<Props> = ({ firebaseApp }) => {
+const LoginPage: React.VFC<Props> = ({ firebaseAuth }) => {
     const router = useRouter();
 
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
-        if (!firebaseApp) return;
+        if (!firebaseAuth) return;
+
+        setLoading(false);
+
         // ログイン済みなら /game ページに自動的に遷移する
-        firebaseApp.auth().onAuthStateChanged((user) => {
+        firebaseAuth.onAuthStateChanged((user) => {
             if (!user) return;
             void router.replace('/game');
         });
-    }, [firebaseApp, router]);
+    }, [firebaseAuth, router]);
 
     return (
         <>
@@ -28,7 +33,11 @@ const LoginPage: React.VFC<Props> = ({ firebaseApp }) => {
                 <title>ログイン | A/ive</title>
             </Head>
             <h2>ログイン</h2>
-            {firebaseApp && <AuthUI firebaseApp={firebaseApp} />}
+            {loading ? (
+                <p>Loading...</p>
+            ) : (
+                firebaseAuth && <AuthUI firebaseAuth={firebaseAuth} />
+            )}
         </>
     );
 };

@@ -23,25 +23,38 @@ const MyApp: React.VFC<AppProps> = ({ Component, pageProps }) => {
         });
     }, []);
 
+    // FIXME: Unnecessarily complicated side effects
     const [firebaseApp, setFirebaseApp] = useState<firebase.app.App | null>(
         null
     );
-
+    const [firebaseAuth, setFirebaseAuth] = useState<firebase.auth.Auth | null>(
+        null
+    );
     useEffect(() => {
         if (firebaseApp) {
-            return () => {
-                void firebaseApp?.delete();
-            };
+            if (firebaseAuth) return;
+
+            const auth = firebaseApp.auth();
+            if (process.env.useEmulators) {
+                auth.useEmulator('http://localhost:9099');
+            }
+            setFirebaseAuth(auth);
+            return;
         }
+
         setFirebaseApp(firebase.initializeApp(firebaseConfig));
-    }, [firebaseApp]);
+    }, [firebaseApp, firebaseAuth]);
 
     return (
         <>
             <Head>
                 <link rel="manifest" href="/manifest.json" />
             </Head>
-            <Component {...pageProps} firebaseApp={firebaseApp} />
+            <Component
+                {...pageProps}
+                firebaseApp={firebaseApp}
+                firebaseAuth={firebaseAuth}
+            />
         </>
     );
 };

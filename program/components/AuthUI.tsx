@@ -2,8 +2,9 @@ import firebase from 'firebase/app';
 import React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
+// FIXME: Local Emulator Suite を使用している場合にログインに失敗する
 interface Props {
-    firebaseApp: firebase.app.App;
+    firebaseAuth: firebase.auth.Auth;
 }
 
 const uiConfig: firebaseui.auth.Config = {
@@ -13,8 +14,8 @@ const uiConfig: firebaseui.auth.Config = {
     credentialHelper: 'none',
 };
 
-const AuthUI: React.VFC<Props> = ({ firebaseApp }) => (
-    <StyledFirebaseAuth firebaseAuth={firebaseApp.auth()} uiConfig={uiConfig} />
+const AuthUI: React.VFC<Props> = ({ firebaseAuth }) => (
+    <StyledFirebaseAuth firebaseAuth={firebaseAuth} uiConfig={uiConfig} />
 );
 
 export default AuthUI;

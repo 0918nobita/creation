@@ -28,6 +28,16 @@ yarn dev
 yarn build
 ```
 
+## Firebase Local Emulator Suite を使用して動作確認する
+
+```bash
+firebase emulators:start
+```
+
+```bash
+USE_EMULATORS=true yarn dev
+```
+
 ## ライセンス一覧を生成する
 
 ```bash
