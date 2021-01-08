@@ -1,5 +1,8 @@
 /licenses.json
 
+# Firebase
+.firebaserc
+
 # Firebase Local Emulator Suite
 firebase-debug.log
 firestore-debug.log
