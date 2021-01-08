@@ -4,6 +4,7 @@ import React, { createContext, useEffect, useState } from 'react';
 export type State = null | {
     app: firebase.app.App;
     auth: firebase.auth.Auth;
+    firestore: firebase.firestore.Firestore;
     storage: firebase.storage.Storage;
 };
 
@@ -23,11 +24,35 @@ export const FirebaseContextProvider: React.FC = ({ children }) => {
         if (state !== null) return;
         const app = firebase.initializeApp(firebaseConfig);
         const auth = app.auth();
+        const firestore = app.firestore();
+
         if (process.env.useEmulators) {
             auth.useEmulator('http://localhost:9099');
+            firestore.useEmulator('localhost', 8080);
         }
+
+        firestore.enablePersistence().catch((err: { code: string }) => {
+            switch (err.code) {
+                case 'failed-precondition':
+                    console.info(
+                        'すでに別のタブでオフラインキャッシュの設定が行われています'
+                    );
+                    break;
+                case 'unimplemented':
+                    console.warn(
+                        'この端末はセーブデータのオフラインキャッシュに対応していません'
+                    );
+                    break;
+                default:
+                    console.error(
+                        'オフラインキャッシュを設定する際に予期しないエラーが発生しました',
+                        err
+                    );
+            }
+        });
+
         const storage = app.storage();
-        setState({ app, auth, storage });
+        setState({ app, auth, firestore, storage });
     }, [state, setState]);
 
     return (
