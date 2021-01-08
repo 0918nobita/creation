@@ -1,4 +1,6 @@
+// Side effects for using Firebase Web SDK
 import 'firebase/auth';
+
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import React, { useEffect } from 'react';
