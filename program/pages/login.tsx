@@ -32,7 +32,6 @@ const LoginPage: React.VFC = () => {
             <Head>
                 <title>ログイン | A/ive</title>
             </Head>
-            <h2>ログイン</h2>
             {loading ? (
                 <p>Loading...</p>
             ) : (
