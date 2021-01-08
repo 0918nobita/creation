@@ -18,7 +18,13 @@ module.exports = {
         'import/no-named-as-default-member': 'error',
         'import/no-unassigned-import': [
             'error',
-            { allow: ['firebase/auth', 'tailwindcss/tailwind.css'] },
+            {
+                allow: [
+                    'firebase/auth',
+                    'firebase/storage',
+                    'tailwindcss/tailwind.css',
+                ],
+            },
         ],
         'import/no-useless-path-segments': ['error', { noUselessIndex: true }],
         'import/order': 'error',
