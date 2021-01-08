@@ -165,18 +165,63 @@ const Game: React.VFC = () => {
     }, []);
 
     return (
-        <div
-            ref={ref}
-            className={[
-                styles.container,
-                'flex',
-                'justify-center',
-                'items-center',
-                'w-screen',
-                'h-screen',
-                'bg-black',
-            ].join(' ')}
-        />
+        <>
+            <div
+                ref={ref}
+                className={[
+                    styles.container,
+                    'flex',
+                    'justify-center',
+                    'items-center',
+                    'w-screen',
+                    'h-screen',
+                    'bg-black',
+                ].join(' ')}
+            />
+            <svg
+                viewBox="0,0,1280,720"
+                className="absolute top-0 left-0 w-screen h-screen pointer-events-none"
+            >
+                <defs>
+                    <linearGradient
+                        id="gradient"
+                        x1="0%"
+                        y1="0%"
+                        x2="0%"
+                        y2="100%"
+                    >
+                        <stop
+                            offset="0"
+                            stopColor="rgb(0, 104, 145)"
+                            stopOpacity="0"
+                        />
+                        <stop
+                            offset="20%"
+                            stopColor="rgb(0, 104, 145)"
+                            stopOpacity="0.7"
+                        />
+                    </linearGradient>
+                </defs>
+                <rect
+                    x="0"
+                    y="480"
+                    width="1280"
+                    height="240"
+                    fill="url(#gradient)"
+                />
+                <text
+                    className="pointer-events-auto"
+                    x="250"
+                    y="580"
+                    stroke="black"
+                    fontWeight="bold"
+                    fill="white"
+                    fontSize="30"
+                >
+                    ここにセリフの文字起こしが表示される
+                </text>
+            </svg>
+        </>
     );
 };
 
