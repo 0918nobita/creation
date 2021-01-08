@@ -1,0 +1,12 @@
+{
+    "kind": "badges",
+    "version": 1,
+    "badges": [
+        {
+            "id": "badge-1",
+            "name": "バッジ名",
+            "desc": "説明文",
+            "img": ""
+        }
+    ]
+}

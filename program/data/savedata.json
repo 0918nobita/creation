@@ -1,0 +1,13 @@
+{
+    "kind": "saveData",
+    "version": 1,
+    "savedScenes": [
+        { "id": "scene-1-1-1-1" }
+    ],
+    "readScenes": [
+        { "id": "scene-1-1-1-1" }
+    ],
+    "badges": [
+        { "id": "badge-1" }
+    ]
+}

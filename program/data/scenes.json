@@ -1,0 +1,11 @@
+{
+    "kind": "scenes",
+    "version": 1,
+    "scenes": [
+        {
+            "id": "scene-1-1-1-1",
+            "char": "narrator",
+            "text": "これは、まだ彼女が生まれる前のお話。"
+        }
+    ]
+}
