@@ -7,8 +7,4 @@ module.exports = {
         // Use Firebase Local Emulator Suite
         useEmulators: process.env.USE_EMULATORS,
     },
-    webpack: (config) => {
-        config.resolve.alias['firebaseui'] = 'firebaseui-ja';
-        return config;
-    },
 };
