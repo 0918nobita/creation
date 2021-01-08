@@ -16,12 +16,10 @@
     "@fleur/fleur": "^2.0.0",
     "@fleur/react": "^4.0.1",
     "firebase": "^8.2.1",
-    "firebaseui-ja": "^1.0.0",
     "next": "^10.0.4",
     "pixi.js": "^5.3.7",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-firebaseui": "^4.1.0"
+    "react-dom": "^16.12.0"
   },
   "devDependencies": {
     "@types/node": "^12.12.21",
