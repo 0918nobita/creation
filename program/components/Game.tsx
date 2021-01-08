@@ -49,7 +49,14 @@ const Game: React.VFC = () => {
             const makeBufferSourceNode = (): AudioBufferSourceNode => {
                 const audioBufferSourceNode = ctx.createBufferSource();
                 audioBufferSourceNode.buffer = audioBuffer;
-                audioBufferSourceNode.connect(ctx.destination);
+
+                const gainNode = ctx.createGain();
+                gainNode.gain.value = 0.5;
+
+                audioBufferSourceNode
+                    .connect(gainNode)
+                    .connect(ctx.destination);
+
                 return audioBufferSourceNode;
             };
 
