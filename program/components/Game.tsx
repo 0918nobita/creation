@@ -196,9 +196,14 @@ const Game: React.VFC = () => {
                             stopOpacity="0"
                         />
                         <stop
-                            offset="20%"
+                            offset="15%"
                             stopColor="rgb(0, 104, 145)"
-                            stopOpacity="0.7"
+                            stopOpacity="0.4"
+                        />
+                        <stop
+                            offset="30%"
+                            stopColor="rgb(0, 104, 145)"
+                            stopOpacity="0.6"
                         />
                     </linearGradient>
                 </defs>
