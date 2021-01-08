@@ -1,16 +1,11 @@
-import firebase from 'firebase/app';
 import 'firebase/auth';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+
+import { FirebaseContextProvider } from '../contexts/FirebaseContext';
 
 import 'tailwindcss/tailwind.css';
-
-const firebaseConfig = {
-    apiKey: process.env.apiKey,
-    authDomain: process.env.authDomain,
-    projectId: process.env.projectId,
-};
 
 const MyApp: React.VFC<AppProps> = ({ Component, pageProps }) => {
     useEffect(() => {
@@ -23,38 +18,14 @@ const MyApp: React.VFC<AppProps> = ({ Component, pageProps }) => {
         });
     }, []);
 
-    // FIXME: Unnecessarily complicated side effects
-    const [firebaseApp, setFirebaseApp] = useState<firebase.app.App | null>(
-        null
-    );
-    const [firebaseAuth, setFirebaseAuth] = useState<firebase.auth.Auth | null>(
-        null
-    );
-    useEffect(() => {
-        if (firebaseApp) {
-            if (firebaseAuth) return;
-
-            const auth = firebaseApp.auth();
-            if (process.env.useEmulators) {
-                auth.useEmulator('http://localhost:9099');
-            }
-            setFirebaseAuth(auth);
-            return;
-        }
-
-        setFirebaseApp(firebase.initializeApp(firebaseConfig));
-    }, [firebaseApp, firebaseAuth]);
-
     return (
         <>
             <Head>
                 <link rel="manifest" href="/manifest.json" />
             </Head>
-            <Component
-                {...pageProps}
-                firebaseApp={firebaseApp}
-                firebaseAuth={firebaseAuth}
-            />
+            <FirebaseContextProvider>
+                <Component {...pageProps} />
+            </FirebaseContextProvider>
         </>
     );
 };

@@ -1,19 +1,18 @@
-import firebase from 'firebase/app';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Head from 'next/head';
 
-interface Props {
-    firebaseApp?: firebase.app.App;
-}
+import { FirebaseContext } from '../contexts/FirebaseContext';
 
-const LogoutPage: React.VFC<Props> = ({ firebaseApp }) => {
+const LogoutPage: React.VFC = () => {
+    const firebaseState = useContext(FirebaseContext);
+
     const router = useRouter();
 
     useEffect(() => {
-        if (!firebaseApp) return;
+        if (!firebaseState) return;
 
-        const auth = firebaseApp.auth();
+        const { auth } = firebaseState;
         auth.onAuthStateChanged((user) => {
             if (!user) {
                 void router.replace('/');
@@ -23,7 +22,7 @@ const LogoutPage: React.VFC<Props> = ({ firebaseApp }) => {
                 void router.replace('/');
             });
         });
-    }, [firebaseApp, router]);
+    }, [firebaseState, router]);
 
     return (
         <>
