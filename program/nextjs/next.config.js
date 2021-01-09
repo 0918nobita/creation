@@ -1,3 +1,5 @@
+const WorkboxPlugin = require('workbox-webpack-plugin');
+
 module.exports = {
     env: {
         apiKey: process.env.FIREBASE_API_KEY,
@@ -7,5 +9,34 @@ module.exports = {
 
         // Use Firebase Local Emulator Suite
         useEmulators: process.env.USE_EMULATORS,
+    },
+    webpack: (config, { dev }) => {
+        if (!dev) {
+            config.plugins.push(
+                new WorkboxPlugin.GenerateSW({
+                    cacheId: 'workbox',
+                    swDest: 'service-worker.js',
+                    skipWaiting: true,
+                    clientsClaim: false,
+                    runtimeCaching: [
+                        {
+                            urlPattern: '/',
+                            handler: 'NetworkFirst',
+                            options: {
+                                cacheName: 'page',
+                            },
+                        },
+                        {
+                            urlPattern: /\.(png|json)/,
+                            handler: 'CacheFirst',
+                            options: {
+                                cacheName: 'assets',
+                            },
+                        },
+                    ],
+                })
+            );
+        }
+        return config;
     },
 };
