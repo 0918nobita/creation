@@ -15,14 +15,16 @@ import 'tailwindcss/tailwind.css';
 const MyApp: React.VFC<AppProps> = ({ Component, pageProps }) => {
     useEffect(() => {
         if (!('serviceWorker' in navigator)) return;
-        void navigator.serviceWorker
-            .register('/service-worker.js')
-            .then((regisration) => {
-                console.log(
-                    'Service Worker regisration successful with scope: ',
-                    regisration.scope
-                );
-            });
+        if (process.env.NODE_ENV !== 'development') {
+            void navigator.serviceWorker
+                .register('/service-worker.js', { scope: '/' })
+                .then((regisration) => {
+                    console.log(
+                        'Service Worker regisration successful with scope: ',
+                        regisration.scope
+                    );
+                });
+        }
     }, []);
 
     return (

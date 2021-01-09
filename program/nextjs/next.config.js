@@ -1,10 +1,10 @@
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const withOffline = require('next-offline');
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
     enabled: !!process.env.ANALYZE,
 });
 
-const baseConfig = {
+const nextConfig = {
     env: {
         apiKey: process.env.FIREBASE_API_KEY,
         authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -14,35 +14,10 @@ const baseConfig = {
         // Use Firebase Local Emulator Suite
         useEmulators: process.env.USE_EMULATORS,
     },
-    webpack: (config, { dev }) => {
-        if (!dev) {
-            config.plugins.push(
-                new WorkboxPlugin.GenerateSW({
-                    cacheId: 'workbox',
-                    swDest: 'service-worker.js',
-                    skipWaiting: true,
-                    clientsClaim: false,
-                    runtimeCaching: [
-                        {
-                            urlPattern: '/',
-                            handler: 'NetworkFirst',
-                            options: {
-                                cacheName: 'page',
-                            },
-                        },
-                        {
-                            urlPattern: /\.(png|json)/,
-                            handler: 'CacheFirst',
-                            options: {
-                                cacheName: 'assets',
-                            },
-                        },
-                    ],
-                })
-            );
-        }
-        return config;
+    dontAutoRegisterSw: true,
+    workboxOpts: {
+        swDest: 'static/service-worker.js',
     },
 };
 
-module.exports = withBundleAnalyzer(baseConfig);
+module.exports = withBundleAnalyzer(withOffline(nextConfig));
