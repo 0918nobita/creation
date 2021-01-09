@@ -26,3 +26,15 @@ USE_EMULATORS=true yarn dev
 ```
 
 [Next.js アプリのセットアップ](./nextjs/README.md)
+
+## Firebase Firestore のセキュリティルールをデプロイする
+
+```bash
+firebase deploy --only firestore.rules
+```
+
+## Cloud Functions に各関数をデプロイする
+
+```bash
+firebase deploy --only functions
+```

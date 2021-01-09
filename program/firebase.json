@@ -12,5 +12,8 @@
   },
   "firestore": {
     "rules": "firestore.rules"
+  },
+  "functions": {
+    "predeploy": "yarn --cwd \"$RESOURCE_DIR\" run build"
   }
 }
