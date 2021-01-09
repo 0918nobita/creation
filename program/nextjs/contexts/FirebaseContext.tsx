@@ -5,6 +5,7 @@ export type State = null | {
     app: firebase.app.App;
     auth: firebase.auth.Auth;
     firestore: firebase.firestore.Firestore;
+    functions: firebase.functions.Functions;
     storage: firebase.storage.Storage;
 };
 
@@ -24,10 +25,12 @@ export const FirebaseContextProvider: React.FC = ({ children }) => {
         if (state !== null) return;
         const app = firebase.initializeApp(firebaseConfig);
         const auth = app.auth();
+        const functions = app.functions('asia-northeast1');
         const firestore = app.firestore();
 
         if (process.env.useEmulators) {
             auth.useEmulator('http://localhost:9099');
+            functions.useEmulator('localhost', 5001);
             firestore.useEmulator('localhost', 8080);
         }
 
@@ -52,7 +55,7 @@ export const FirebaseContextProvider: React.FC = ({ children }) => {
         });
 
         const storage = app.storage();
-        setState({ app, auth, firestore, storage });
+        setState({ app, auth, firestore, functions, storage });
     }, [state, setState]);
 
     return (

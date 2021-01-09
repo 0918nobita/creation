@@ -22,6 +22,7 @@ module.exports = {
                 allow: [
                     'firebase/auth',
                     'firebase/firestore',
+                    'firebase/functions',
                     'firebase/storage',
                     'tailwindcss/tailwind.css',
                 ],
