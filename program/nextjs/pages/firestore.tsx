@@ -21,7 +21,9 @@ const FirestorePage: React.FC = () => {
             }
             void (async () => {
                 const res = await firestore
-                    .collection('users')
+                    .collection('version')
+                    .doc('1')
+                    .collection('user')
                     .doc(user.uid)
                     .get();
                 setName((res.data() as { name: string }).name);

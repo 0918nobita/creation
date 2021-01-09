@@ -1,45 +1,28 @@
-# プログラム本体
+# プログラム
 
-[Next.js](https://nextjs.org/) アプリケーションとして開発し、[Vercel](https://vercel.com/home) にデプロイしています。
+２つのプロジェクトに分かれています
 
-## セットアップ
+- `functions/` : Cloud Functions にデプロイされる各関数の定義
+- `nextjs/` : Vercel にデプロイされる Next.js アプリケーション
 
-```bash
-yarn
-```
+## 必要なツール
 
-`.env.local` ファイルを作成し、firebase に関する情報を以下のように記入してください。
+- Firebase CLI
 
-```ini
-FIREBASE_API_KEY=...
-FIREBASE_AUTH_DOMAIN=...
-FIREBASE_PROJECT_ID=...
-```
+## ローカルで動作確認をする
 
-## 起動方法
-
-```bash
-yarn dev
-```
-
-## ビルド方法
-
-```bash
-yarn build
-```
-
-## Firebase Local Emulator Suite を使用して動作確認する
+### Firebase Local Emulator Suite を起動する
 
 ```bash
 firebase emulators:start
 ```
 
+### Next.js アプリの開発用サーバを起動する
+
 ```bash
+cd nextjs
+# Next.js アプリのセットアップを済ませておく
 USE_EMULATORS=true yarn dev
 ```
 
-## ライセンス一覧を生成する
-
-```bash
-yarn generate-licenses
-```
+[Next.js アプリのセットアップ](./nextjs/README.md)
