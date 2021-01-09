@@ -1,6 +1,10 @@
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
-module.exports = {
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: !!process.env.ANALYZE,
+});
+
+const baseConfig = {
     env: {
         apiKey: process.env.FIREBASE_API_KEY,
         authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -40,3 +44,5 @@ module.exports = {
         return config;
     },
 };
+
+module.exports = withBundleAnalyzer(baseConfig);

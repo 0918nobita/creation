@@ -26,6 +26,14 @@ yarn dev
 yarn build
 ```
 
+### Bundle Analyzer によるレポートも併せて出力する
+
+```bash
+ANALYZE=true yarn build
+```
+
+`.next/analyze` ディレクトリ内に HTML ファイルが生成されます
+
 ## ライセンス一覧を生成する
 
 ```bash
