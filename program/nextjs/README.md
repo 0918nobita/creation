@@ -6,7 +6,7 @@
 yarn
 ```
 
-`.env.local` ファイルを作成し、firebase に関する情報を以下のように記入してください。
+**【重要】** `.env.local` ファイルを作成し、firebase に関する情報を以下のように記入してください。
 
 ```ini
 FIREBASE_API_KEY=...

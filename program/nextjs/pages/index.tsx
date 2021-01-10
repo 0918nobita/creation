@@ -6,7 +6,7 @@ const IndexPage: React.VFC = () => (
         <Head>
             <title>A/ive</title>
         </Head>
-        <p>Hello, world!</p>
+        <p>Hello world from Cloud Run</p>
     </>
 );
 
