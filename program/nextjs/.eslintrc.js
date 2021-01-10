@@ -21,9 +21,8 @@ module.exports = {
             {
                 allow: [
                     'firebase/auth',
-                    'firebase/firestore',
+                    'firebase/database',
                     'firebase/functions',
-                    'firebase/storage',
                     'tailwindcss/tailwind.css',
                 ],
             },
@@ -35,11 +34,6 @@ module.exports = {
         {
             files: ['**/*.ts', '**/*.tsx'],
             parser: '@typescript-eslint/parser',
-            parserOptions: {
-                sourceType: 'module',
-                tsconfigRootDir: __dirname,
-                project: './tsconfig.json',
-            },
             plugins: ['@typescript-eslint', 'deprecation'],
             extends: [
                 'plugin:@typescript-eslint/recommended',
@@ -67,6 +61,23 @@ module.exports = {
                     },
                 ],
                 'react/prop-types': 'off',
+            },
+        },
+        {
+            files: ['**/*.ts', '**/*.tsx'],
+            excludedFiles: ['server/*'],
+            parserOptions: {
+                sourceType: 'module',
+                tsconfigRootDir: __dirname,
+                project: './tsconfig.json',
+            },
+        },
+        {
+            files: ['server/**/*.ts'],
+            parserOptions: {
+                sourceType: 'module',
+                tsconfigRootDir: __dirname,
+                project: './tsconfig.server.json',
             },
         },
     ],
