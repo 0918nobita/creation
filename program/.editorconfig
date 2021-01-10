@@ -8,8 +8,5 @@ charset = utf-8
 trim_trailing_whitespace = false
 insert_final_newline = true
 
-[*.yaml]
-indent_size = 2
-
-[{firebase,package,tsconfig,tsconfig.server}.json]
+[*.{yaml,json,tf}]
 indent_size = 2

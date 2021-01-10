@@ -5,3 +5,12 @@
 firebase-debug.log
 database-debug.log
 ui-debug.log
+
+# Google Cloud Platform
+gcp-credential.json
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.backup
