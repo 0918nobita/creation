@@ -1,19 +1,17 @@
 {
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "functions": {
+    "predeploy": "yarn --cwd \"$RESOURCE_DIR\" run build",
+    "source": "functions"
+  },
   "emulators": {
     "auth": {
       "port": 9099
     },
-    "firestore": {
-      "port": 8080
-    },
     "ui": {
       "enabled": true
     }
-  },
-  "firestore": {
-    "rules": "firestore.rules"
-  },
-  "functions": {
-    "predeploy": "yarn --cwd \"$RESOURCE_DIR\" run build"
   }
 }
