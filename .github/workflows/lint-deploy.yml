@@ -1,0 +1,78 @@
+name: Lint and Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  HOSTNAME: gcr.io
+  REGION: asia-northeast1
+  SERVICE: alive
+
+jobs:
+  lint:
+    name: Lint Code Base
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Lint Code Base
+        uses: github/super-linter@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_JAVASCRIPT_STANDARD: false
+          VALIDATE_TYPESCRIPT_STANDARD: false
+
+  deploy:
+    name: Deploy on Cloud Run
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - run: gcloud info
+
+      - run: |
+          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+          gcloud config set run/platform managed
+          gcloud config set run/region ${REGION}
+          gcloud auth configure-docker
+      
+      - name: Create .env
+        run: |
+          echo ${{ secrets.FIREBASE_API_KEY }} >> .env
+          echo ${{ secrets.FIREBASE_AUTH_DOMAIN }} >> .env
+          echo ${{ secrets.FIREBASE_DATABASE_URL }} >> .env
+          echo ${{ secrets.FIREBASE_PROJECT_ID }} >> .env
+        working-directory: ./program/nextjs
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t ${{ env.HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/cloudrun/${{ env.SERVICE }} \
+            .
+        working-directory: ./program/nextjs
+
+      - name: Publish Docker image
+        run: |
+          docker push ${{ env.HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/cloudrun/${{ env.SERVICE }}
+
+      - name: Deploy Docker image
+        run: |
+          gcloud run deploy \
+            ${{ env.SERVICE }} \
+            --image ${{ env.HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/cloudrun/${{ env.SERVICE }} \
+            --allow-unauthenticated
