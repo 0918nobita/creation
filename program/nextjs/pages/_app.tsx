@@ -1,6 +1,5 @@
 // Side effects for using Firebase Web SDK
 import 'firebase/auth';
-import 'firebase/functions';
 import 'firebase/database';
 
 import type { AppProps } from 'next/app';
