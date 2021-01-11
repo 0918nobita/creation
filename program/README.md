@@ -86,10 +86,10 @@ gcloud auth application-default login
 
 保存先パスが出力されるので、それを環境変数 `GOOGLE_APPLICATION_CREDENTIALS` に代入した状態で `terraform` コマンドを呼び出すようにしてください。
 
-参考：https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started
+参考：[Getting Started with the Google Provider | Terraform Registry](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started)
 
 `.zshrc` の設定例：
 
-```
+```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/home/username/.config/gcloud/application_default_credentials.json
 ```
