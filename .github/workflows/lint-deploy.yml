@@ -71,11 +71,11 @@ jobs:
 
       - name: Publish Docker image
         run: |
-          docker push ${{ env.HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/cloudrun/${{ env.SERVICE }}
+          docker push ${{ env.HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/cloudrun/${{ env.SERVICE }}:latest
 
       - name: Deploy Docker image
         run: |
           gcloud run deploy \
             ${{ env.SERVICE }} \
-            --image ${{ env.HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/cloudrun/${{ env.SERVICE }} \
+            --image ${{ env.HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/cloudrun/${{ env.SERVICE }}:latest \
             --allow-unauthenticated
