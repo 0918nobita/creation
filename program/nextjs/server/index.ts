@@ -9,11 +9,18 @@ const port = PORT ? parseInt(PORT) : 3000;
 
 async function main() {
     try {
-        await app.prepare();
         const server = express();
+
+        server.get('/ping', (_, res) => {
+            res.send('pong');
+        });
+
+        await app.prepare();
+
         server.all('*', (req, res) => {
             void handle(req, res);
         });
+
         server.listen(port, (err?: unknown) => {
             if (err) throw err;
             console.log(
