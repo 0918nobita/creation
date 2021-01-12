@@ -1,5 +1,6 @@
 import express from 'express';
 import next from 'next';
+import 'isomorphic-fetch';
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -11,8 +12,12 @@ async function main() {
     try {
         const server = express();
 
-        server.get('/ping', (_, res) => {
-            res.send('pong');
+        server.get('/ping', (_, res, next) => {
+            void fetch('https://api.alive.kodai.vision')
+                .then(() => {
+                    res.send('pong');
+                })
+                .catch((err) => next(err));
         });
 
         await app.prepare();

@@ -23,6 +23,7 @@ module.exports = {
                     'firebase/auth',
                     'firebase/database',
                     'firebase/functions',
+                    'isomorphic-fetch',
                     'tailwindcss/tailwind.css',
                 ],
             },
