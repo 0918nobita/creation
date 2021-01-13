@@ -1,0 +1,11 @@
+name: Branching
+description: Select jobs which will be executed
+
+inputs:
+  files:
+    description: Changed files (JSON)
+    required: true
+
+runs:
+  using: docker
+  image: Dockerfile

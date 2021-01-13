@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "program/actions/branching"
+		},
+		{
+			"path": "program/backup-service"
+		}
+	],
+	"settings": {}
+}

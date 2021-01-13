@@ -14,43 +14,23 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      is_app_changed: ${{ steps.is_app_changed.outputs.result }}
-      is_service_changed: ${{ steps.is_service_changed.outputs.result }}
-      is_infra_changed: ${{ steps.is_infra_changed.outputs.result }}
+      is_app_changed: ${{ steps.branching.outputs.is_app_changed }}
+      is_service_changed: ${{ steps.branching.outputs.is_service_changed }}
+      is_infra_changed: ${{ steps.branching.outputs.is_infra_changed }}
+      is_action_changed: ${{ steps.branching.outputs.is_action_changed }}
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - id: file_changes
-        name: Collect changed files
         uses: trilom/file-changes-action@v1.2.4
 
-      - id: is_app_changed
-        uses: actions/github-script@v2
-        env:
-          FILES_CHANGED: ${{ steps.file_changes.outputs.files }}
+      - id: branching
+        uses: ./program/actions/branching
         with:
-          script: |
-            const files = JSON.parse(process.env.FILES_CHANGED);
-            return files.some((file) => file.startsWith('program/nextjs'));
-
-      - id: is_service_changed
-        uses: actions/github-script@v2
-        env:
-          FILES_CHANGED: ${{ steps.file_changes.outputs.files }}
-        with:
-          script: |
-            const files = JSON.parse(process.env.FILES_CHANGED);
-            return files.some((file) => file.startsWith('program/backup-service'));
-
-      - id: is_infra_changed
-        uses: actions/github-script@v2
-        env:
-          FILES_CHANGED: ${{ steps.file_changes.outputs.files }}
-        with:
-          script: |
-            const files = JSON.parse(process.env.FILES_CHANGED);
-            return files.some((file) => file.startsWith('program/infra'));
+          files: ${{ steps.file_changes.outputs.files }}
 
   lint-app:
     needs: precheck
@@ -86,6 +66,11 @@ jobs:
         with:
           dockerfile: ./program/backup-service/Dockerfile
 
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          working-directory: ./program/backup-service
+
   lint-infra:
     needs: precheck
     if: "fromJson(needs.precheck.outputs.is_infra_changed) && !contains(github.event.head_commit.message, '[skip ci]')"
@@ -98,14 +83,27 @@ jobs:
       - run: terraform fmt -check -diff
         working-directory: ./program/infra
 
+  lint-action:
+    needs: precheck
+    if: "fromJson(needs.precheck.outputs.is_action_changed) && !contains(github.event.head_commit.message, '[skip ci]')"
+    name: Lint action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          working-directory: ./program/actions/branching
+
   deploy-app:
     if: "!contains(github.event.head_commit.message, '[skip cd]')"
     name: Deploy "alive" Docker image
     needs: lint-app
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
