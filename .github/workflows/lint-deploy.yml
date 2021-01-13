@@ -13,39 +13,65 @@ jobs:
   precheck:
     runs-on: ubuntu-latest
     outputs:
-      files_changed: ${{ steps.file_changes.outputs.files }}
+      is_frontend_changed: ${{ steps.is_frontend_changed.outputs.result }}
+      is_infra_changed: ${{ steps.is_infra_changed.outputs.result }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
+
       - id: file_changes
         name: Collect changed files
         uses: trilom/file-changes-action@v1.2.4
 
-  lint:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    name: Lint Code Base
+      - id: is_frontend_changed
+        uses: actions/github-script@v2
+        env:
+          FILES_CHANGED: ${{ steps.file_changes.outputs.files }}
+        with:
+          script: |
+            const files = JSON.parse(process.env.FILES_CHANGED);
+            return files.some((file) => file.startsWith('program/nextjs'));
+
+      - id: is_infra_changed
+        uses: actions/github-script@v2
+        env:
+          FILES_CHANGED: ${{ steps.file_changes.outputs.files }}
+        with:
+          script: |
+            const files = JSON.parse(process.env.FILES_CHANGED);
+            return files.some((file) => file.startsWith('program/infra'));
+
+  eslint:
     needs: precheck
+    if: "fromJson(needs.precheck.outputs.is_frontend_changed) && !contains(github.event.head_commit.message, '[skip ci]')"
+    name: ESLint
     runs-on: ubuntu-latest
     steps:
-      - name: Show changed files
-        run: echo "${{ needs.precheck.outputs.files_changed }}"
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Lint Code Base
-        uses: github/super-linter@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_ALL_CODEBASE: false
-          VALIDATE_GO: false
-          VALIDATE_JAVASCRIPT_STANDARD: false
-          VALIDATE_TYPESCRIPT_STANDARD: false
+      - name: ESLint
+        run: yarn && yarn lint
+        working-directory: ./program/nextjs
+
+  tf-fmt:
+    needs: precheck
+    if: "fromJson(needs.precheck.outputs.is_infra_changed) && !contains(github.event.head_commit.message, '[skip ci]')"
+    name: terraform fmt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: terraform fmt -check -diff
+        working-directory: ./program/infra
 
   deploy-alive:
     if: "!contains(github.event.head_commit.message, '[skip cd]')"
     name: Deploy "alive" Docker image
-    needs: lint
+    needs: eslint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -95,7 +121,7 @@ jobs:
   deploy-alive-backup-service:
     if: "!contains(github.event.head_commit.message, '[skip cd]')"
     name: Deploy "alive-backup-service" Docker image
-    needs: lint
+    needs: eslint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
