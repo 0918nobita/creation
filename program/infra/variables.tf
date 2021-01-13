@@ -1,0 +1,3 @@
+variable "gcpProjectId" {
+  type = string
+}
