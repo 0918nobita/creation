@@ -12,18 +12,20 @@ env:
 jobs:
   precheck:
     runs-on: ubuntu-latest
+
     outputs:
-      is_frontend_changed: ${{ steps.is_frontend_changed.outputs.result }}
+      is_app_changed: ${{ steps.is_app_changed.outputs.result }}
+      is_service_changed: ${{ steps.is_service_changed.outputs.result }}
       is_infra_changed: ${{ steps.is_infra_changed.outputs.result }}
+
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       - id: file_changes
         name: Collect changed files
         uses: trilom/file-changes-action@v1.2.4
 
-      - id: is_frontend_changed
+      - id: is_app_changed
         uses: actions/github-script@v2
         env:
           FILES_CHANGED: ${{ steps.file_changes.outputs.files }}
@@ -31,6 +33,15 @@ jobs:
           script: |
             const files = JSON.parse(process.env.FILES_CHANGED);
             return files.some((file) => file.startsWith('program/nextjs'));
+
+      - id: is_service_changed
+        uses: actions/github-script@v2
+        env:
+          FILES_CHANGED: ${{ steps.file_changes.outputs.files }}
+        with:
+          script: |
+            const files = JSON.parse(process.env.FILES_CHANGED);
+            return files.some((file) => file.startsWith('program/backup-service'));
 
       - id: is_infra_changed
         uses: actions/github-script@v2
@@ -41,37 +52,56 @@ jobs:
             const files = JSON.parse(process.env.FILES_CHANGED);
             return files.some((file) => file.startsWith('program/infra'));
 
-  eslint:
+  lint-app:
     needs: precheck
-    if: "fromJson(needs.precheck.outputs.is_frontend_changed) && !contains(github.event.head_commit.message, '[skip ci]')"
-    name: ESLint
+    if: "fromJson(needs.precheck.outputs.is_app_changed) && !contains(github.event.head_commit.message, '[skip ci]')"
+    name: Lint app
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: ESLint
+
+      - name: Run Hadolint
+        uses: brpaz/hadolint-action@v1.3.1
+        with:
+          dockerfile: ./program/backup-service/Dockerfile
+
+      - name: Run ESLint
         run: yarn && yarn lint
         working-directory: ./program/nextjs
 
-  tf-fmt:
+  lint-service:
     needs: precheck
-    if: "fromJson(needs.precheck.outputs.is_infra_changed) && !contains(github.event.head_commit.message, '[skip ci]')"
-    name: terraform fmt
+    if: "fromJson(needs.precheck.outputs.is_service_changed) && !contains(github.event.head_commit.message, '[skip ci]')"
+    name: Lint service
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Run Hadolint
+        uses: brpaz/hadolint-action@v1.3.1
+        with:
+          dockerfile: ./program/backup-service/Dockerfile
+
+  lint-infra:
+    needs: precheck
+    if: "fromJson(needs.precheck.outputs.is_infra_changed) && !contains(github.event.head_commit.message, '[skip ci]')"
+    name: Lint infra
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - run: terraform fmt -check -diff
         working-directory: ./program/infra
 
-  deploy-alive:
+  deploy-app:
     if: "!contains(github.event.head_commit.message, '[skip cd]')"
     name: Deploy "alive" Docker image
-    needs: eslint
+    needs: lint-app
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -118,14 +148,13 @@ jobs:
             --image ${{ env.HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/cloudrun/alive:latest \
             --allow-unauthenticated
 
-  deploy-alive-backup-service:
+  deploy-service:
     if: "!contains(github.event.head_commit.message, '[skip cd]')"
     name: Deploy "alive-backup-service" Docker image
-    needs: eslint
+    needs: lint-service
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
