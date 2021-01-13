@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  HOSTNAME: gcr.io
+  HOSTNAME: asia.gcr.io
   REGION: asia-northeast1
 
 jobs:
