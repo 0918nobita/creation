@@ -5,7 +5,7 @@ resource "google_cloud_run_service" "backup_service" {
     metadata {
       annotations = {
         "autoscaling.knative.dev/maxScale"  = "1000"
-        "client.knative.dev/user-image"     = "gcr.io/alive-301110/cloudrun/alive-backup-service:latest"
+        "client.knative.dev/user-image"     = "asia.gcr.io/alive-301110/cloudrun/alive-backup-service:latest"
         "run.googleapis.com/client-name"    = "gcloud"
         "run.googleapis.com/client-version" = "323.0.0"
       }
@@ -16,7 +16,7 @@ resource "google_cloud_run_service" "backup_service" {
       service_account_name  = "725724983678-compute@developer.gserviceaccount.com"
       timeout_seconds       = 300
       containers {
-        image = "gcr.io/alive-301110/cloudrun/alive-backup-service:latest"
+        image = "asia.gcr.io/alive-301110/cloudrun/alive-backup-service:latest"
         ports {
           container_port = 8080
         }
