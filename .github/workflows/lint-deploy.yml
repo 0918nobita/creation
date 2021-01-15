@@ -122,29 +122,11 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
-      - run: |
-          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
-          gcloud config set run/platform managed
-          gcloud config set run/region ${REGION}
-          gcloud auth configure-docker
-
-      - name: Build Docker image
-        run: |
-          docker build \
-            -t ${{ env.HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/cloudrun/alive \
-            .
-        working-directory: ./program/nextjs
-
-      - name: Publish Docker image
-        run: |
-          docker push ${{ env.HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/cloudrun/alive:latest
-
-      - name: Deploy Docker image
-        run: |
-          gcloud run deploy \
-            alive \
-            --image ${{ env.HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/cloudrun/alive:latest \
-            --allow-unauthenticated
+      - uses: ./program/actions/build-deploy-image
+        with:
+          project-id: ${{ secrets.GCP_PROJECT_ID }}
+          service-name: alive
+          working-directory: ./program/nextjs
 
   deploy-service:
     if: "!contains(github.event.head_commit.message, '[skip cd]')"
@@ -163,26 +145,8 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
-      - run: |
-          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
-          gcloud config set run/platform managed
-          gcloud config set run/region ${REGION}
-          gcloud auth configure-docker
-
-      - name: Build Docker image
-        run: |
-          docker build \
-            -t ${{ env.HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/cloudrun/alive-backup-service \
-            .
-        working-directory: ./program/backup-service
-
-      - name: Publish Docker image
-        run: |
-          docker push ${{ env.HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/cloudrun/alive-backup-service:latest
-
-      - name: Deploy Docker image
-        run: |
-          gcloud run deploy \
-            alive-backup-service \
-            --image ${{ env.HOSTNAME }}/${{ secrets.GCP_PROJECT_ID }}/cloudrun/alive-backup-service:latest \
-            --allow-unauthenticated
+      - uses: ./program/actions/build-deploy-image
+        with:
+          project-id: ${{ secrets.GCP_PROJECT_ID }}
+          service-name: alive-backup-service
+          working-directory: ./program/backup-service

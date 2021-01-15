@@ -1,0 +1,29 @@
+name: Build and deploy Docker image
+description: Build and deploy Docker image to Container Registry & Cloud Run
+
+inputs:
+  project-id:
+    required: true
+  service-name:
+    required: true
+  working-directory:
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - run: |
+        gcloud config set project ${{ inputs.project-id }}
+        gcloud config set run/platform managed
+        gcloud config set run/region asia-northeast1
+        gcloud auth configure-docker
+        docker build \
+          -t asia.gcr.io/${{ inputs.project-id }}/cloudrun/${{ inputs.service-name }} \
+          .
+        docker push asia.gcr.io/${{ inputs.project-id }}/cloudrun/${{ inputs.service-name }}:latest
+        gcloud run deploy \
+          alive \
+          --image asia.gcr.io/${{ inputs.project-id }}/cloudrun/${{ inputs.service-name }}:latest \
+          --allow-unauthenticated
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
